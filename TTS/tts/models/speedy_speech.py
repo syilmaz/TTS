@@ -33,7 +33,7 @@ class SpeedySpeech(nn.Module):
         external_c (bool, optional): enable external speaker embeddings. Defaults to False.
         c_in_channels (int, optional): number of channels in speaker embedding vectors. Defaults to 0.
     """
-# pylint: disable=dangerous-default-value
+    # pylint: disable=dangerous-default-value
 
     def __init__(
         self,
@@ -61,15 +61,17 @@ class SpeedySpeech(nn.Module):
         c_in_channels=0):
 
         super().__init__()
-        self.length_scale = float(length_scale) if isinstance(length_scale, int) else length_scale
+        self.length_scale = float(length_scale) if isinstance(
+            length_scale, int) else length_scale
         self.emb = nn.Embedding(num_chars, hidden_channels)
         self.encoder = Encoder(hidden_channels, hidden_channels, encoder_type,
                                encoder_params, c_in_channels)
         if positional_encoding:
             self.pos_encoder = PositionalEncoding(hidden_channels)
-        self.decoder = Decoder(out_channels, hidden_channels,
-                               decoder_type, decoder_params)
-        self.duration_predictor = DurationPredictor(hidden_channels + c_in_channels)
+        self.decoder = Decoder(out_channels, hidden_channels, decoder_type,
+                               decoder_params)
+        self.duration_predictor = DurationPredictor(hidden_channels +
+                                                    c_in_channels)
 
         if num_speakers > 1 and not external_c:
             # speaker embedding layer

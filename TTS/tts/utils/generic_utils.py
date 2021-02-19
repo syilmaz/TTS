@@ -132,13 +132,23 @@ def setup_model(num_chars, num_speakers, c, speaker_embedding_dim=None):
                         decoder_type=c['decoder_type'],
                         decoder_params=c['decoder_params'],
                         c_in_channels=0)
+    elif c.model.lower() == "speedy_speech_mas":
+        model = MyModel(num_chars=num_chars + getattr(c, "add_blank", False),
+                        out_channels=c.audio['num_mels'],
+                        hidden_channels=c['hidden_channels'],
+                        positional_encoding=c['positional_encoding'],
+                        encoder_type=c['encoder_type'],
+                        encoder_params=c['encoder_params'],
+                        decoder_type=c['decoder_type'],
+                        decoder_params=c['decoder_params'],
+                        c_in_channels=0)
     return model
 
 def is_tacotron(c):
-    return False if c['model'] in ['speedy_speech', 'glow_tts'] else True
+    return 'tacotron' in c['model'].lower()
 
 def check_config_tts(c):
-    check_argument('model', c, enum_list=['tacotron', 'tacotron2', 'glow_tts', 'speedy_speech'], restricted=True, val_type=str)
+    check_argument('model', c, enum_list=['tacotron', 'tacotron2', 'glow_tts', 'speedy_speech', 'speedy_speech_mas'], restricted=True, val_type=str)
     check_argument('run_name', c, restricted=True, val_type=str)
     check_argument('run_description', c, val_type=str)
 
@@ -195,7 +205,7 @@ def check_config_tts(c):
         check_argument('decoder_ssim_alpha', c, restricted=True, val_type=float, min_val=0)
         check_argument('postnet_ssim_alpha', c, restricted=True, val_type=float, min_val=0)
         check_argument('ga_alpha', c, restricted=True, val_type=float, min_val=0)
-    if c['model'].lower == "speedy_speech":
+    if c['model'].lower in ["speedy_speech", "speedy_speech_mas"]:
         check_argument('ssim_alpha', c, restricted=True, val_type=float, min_val=0)
         check_argument('l1_alpha', c, restricted=True, val_type=float, min_val=0)
         check_argument('huber_alpha', c, restricted=True, val_type=float, min_val=0)
@@ -239,7 +249,7 @@ def check_config_tts(c):
         check_argument('separate_stopnet', c, restricted=is_tacotron(c), val_type=bool)
 
     # Model Parameters for non-tacotron models
-    if c['model'].lower == "speedy_speech":
+    if c['model'].lower in ["speedy_speech", "speedy_speech_mas"]:
         check_argument('positional_encoding', c, restricted=True, val_type=type)
         check_argument('encoder_type', c, restricted=True, val_type=str)
         check_argument('encoder_params', c, restricted=True, val_type=dict)

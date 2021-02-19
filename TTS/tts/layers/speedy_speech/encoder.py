@@ -183,10 +183,9 @@ class Encoder(nn.Module):
         # init encoder
         if encoder_type.lower() == "transformer":
             # text encoder
-            self.encoder = RelativePositionTransformerEncoder(in_hidden_channels,
-                                                   out_channels,
-                                                   in_hidden_channels,
-                                                   encoder_params)  # pylint: disable=unexpected-keyword-arg
+            self.encoder = RelativePositionTransformerEncoder(
+                in_hidden_channels, out_channels, in_hidden_channels,
+                encoder_params)  # pylint: disable=unexpected-keyword-arg
         elif encoder_type.lower() == 'residual_conv_bn':
             self.encoder = ResidualConv1dBNEncoder(in_hidden_channels,
                                                    out_channels,
@@ -195,7 +194,6 @@ class Encoder(nn.Module):
         else:
             raise NotImplementedError(' [!] unknown encoder type.')
 
-        # final projection layers
 
 
     def forward(self, x, x_mask, g=None):  # pylint: disable=unused-argument
