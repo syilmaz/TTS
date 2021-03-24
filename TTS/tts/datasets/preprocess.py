@@ -390,3 +390,19 @@ def baker(root_path: str, meta_file: str) ->  List[List[str]]:
             wav_path = os.path.join(root_path, "clips_22", wav_name)
             items.append([text, wav_path, speaker_name])
     return items
+
+# ======================================== CUSTOM ===========================================            
+def custom_sy_mozilla(root_path, meta_file):
+    """Normalizes Mozilla meta data files to TTS format"""
+    txt_file = os.path.join(root_path, meta_file)
+    items = []
+    speaker_name = "mozilla"
+    with open(txt_file, 'r') as ttf:
+        for line in ttf:
+            cols = line.split('|')
+            print(cols)
+            wav_file = cols[1].strip()
+            text = cols[0].strip()
+            wav_file = os.path.join(root_path, wav_file)
+            items.append([text, wav_file, speaker_name])
+    return items
